@@ -1,0 +1,18 @@
+{
+  "name": "itransition-scissors-game",
+  "version": "1.0.0",
+  "description": "Generalized rock-paper-scissors game",
+  "main": "src/index.ts",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "npm run build && node build/index.js"
+  },
+  "keywords": [],
+  "author": "Stan <s2000promax@gmail.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^20.4.5",
+    "typescript": "^5.1.6"
+  }
+}
