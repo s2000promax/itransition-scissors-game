@@ -5,14 +5,20 @@
   "main": "src/index.ts",
   "type": "module",
   "scripts": {
-    "build": "tsc",
-    "start": "npm run build && node build/index.js"
+    "start": "ts-node src/index.ts Rock Fire Scissors Sponge Paper Air Water"
   },
   "keywords": [],
   "author": "Stan <s2000promax@gmail.com>",
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^20.4.5",
+    "@types/readline-sync": "^1.4.4",
+    "ts-node": "^10.9.1",
+    "tslib": "^2.6.1",
     "typescript": "^5.1.6"
+  },
+  "dependencies": {
+    "crypto": "^1.0.1",
+    "readline-sync": "^1.4.10"
   }
 }
