@@ -1,7 +1,7 @@
 import { NodeModel } from './nodeModel.ts';
 
 export class GameModel {
-  public readonly nodes: NodeModel[];
+  private readonly nodes: NodeModel[];
 
   constructor(public readonly names: string[]) {
     this.nodes = names.map((name) => new NodeModel(name));
@@ -30,5 +30,9 @@ export class GameModel {
       throw new Error(`Invalid move: ${move}`);
     }
     return node;
+  }
+
+  public getNodes(): NodeModel[] {
+    return this.nodes;
   }
 }

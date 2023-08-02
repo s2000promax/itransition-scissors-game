@@ -14,4 +14,8 @@ export class NodeModel {
   getNodeName(): string {
     return this.name;
   }
+
+  getConnections() {
+    return this.connections;
+  }
 }

@@ -1,7 +1,10 @@
 import { NodeModel } from '../model/nodeModel.ts';
 import * as Readline from 'readline-sync';
+import { PrintTable } from '../utils/printTable.ts';
 
 export class GameView {
+  private table!: PrintTable;
+
   public printUserMenu(nodes: NodeModel[]): string {
     const readline = Readline;
 
@@ -28,6 +31,15 @@ export class GameView {
   }
 
   public printLog(log: string = ''): void {
-    console.log(log)
+    console.log(log);
+  }
+
+  public showHelp(nodes: NodeModel[]): void {
+    this.table = new PrintTable(nodes)
+    this.printLog(this.table.renderTable());
+  }
+
+  public clearConsole(): void {
+    console.clear();
   }
 }

@@ -4,7 +4,7 @@ import { GameView } from '../view/gameView.ts';
 import { GameRules } from '../model/gameRules.ts';
 
 export class GameController {
-  private readonly gameParams: string[];
+  private readonly gameParams: string[] | undefined;
   private gameCrypto: GameCrypto;
   private gameModel: GameModel;
   private gameView: GameView;
@@ -15,39 +15,49 @@ export class GameController {
   private hmac_user: string = '';
 
   constructor(public readonly params: string[]) {
+    this.gameView = new GameView();
     this.gameCrypto = new GameCrypto();
     this.hmac_key = this.gameCrypto.generateHmacKey();
     this.gameParams = this.validateParams(params);
-    this.gameModel = new GameModel(this.gameParams);
-    this.gameView = new GameView();
+    this.gameModel = new GameModel(this.gameParams!);
     this.gameRules = new GameRules();
   }
 
   public playRound(): void {
-    const computerMove = this.gameRules.getRandomMove(this.gameModel.nodes);
+    this.gameView.clearConsole();
+
+    const computerMove = this.gameRules.getRandomMove(this.gameModel.getNodes());
     const computerNode = this.gameModel.findNode(computerMove);
     this.hmac_computer = this.gameCrypto.encode(this.hmac_key, computerMove);
     this.gameView.printLog(`HMAC: ${this.hmac_computer}`);
 
-    const userMove = this.gameView.printUserMenu(this.gameModel.nodes);
+    const userMove = this.getUserMove();
     this.hmac_user = this.gameCrypto.encode(this.hmac_key, userMove);
+    const userNode = this.gameModel.findNode(userMove);
+
+    this.gameView.printLog(`Your move: ${userMove}`);
+    this.gameView.printLog(`Computer move: ${computerMove}`);
+
+    this.gameView.printLog(this.gameRules.getResult(userNode, computerNode));
+    this.gameView.printLog(`HMAC key: ${this.hmac_key}`)
+  }
+
+  private getUserMove(): string {
+    let userMove = this.gameView.printUserMenu(this.gameModel.getNodes());
 
     if (userMove === '0') {
       this.appTerminate();
     }
 
-    if (userMove !== '?') {
-      const userNode = this.gameModel.findNode(userMove);
-
-      this.gameView.printLog(`Your move: ${userMove}`);
-      this.gameView.printLog(`Computer move: ${computerMove}`);
-
-      this.gameView.printLog(this.gameRules.getResult(userNode, computerNode));
-      this.gameView.printLog(`HMAC key: ${this.hmac_key}`)
+    if (userMove === '?') {
+      this.gameView.showHelp(this.gameModel.getNodes());
+      userMove = this.getUserMove();
     }
+
+    return userMove;
   }
 
-  private validateParams(params: string[]): string[] {
+  private validateParams(params: string[]): string[] | undefined {
     switch (true) {
       case !params.length:
         this.gameView.printLog('The game can only be started with parameters. For example, use Rock Paper Scissors as arguments');
@@ -58,7 +68,11 @@ export class GameController {
         this.appTerminate();
         break;
       case params.length % 2 === 0:
-        this.gameView.printLog('Argument count must be odd');
+        this.gameView.printLog('Arguments count must be odd');
+        this.appTerminate();
+        break;
+      case params.length !== new Set(params).size:
+        this.gameView.printLog('Arguments must be unique');
         this.appTerminate();
         break;
       default:
