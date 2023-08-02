@@ -36,7 +36,8 @@ export class GameController {
     const userNode = this.gameModel.findNode(userMove);
 
     this.gameView.printLog(`Your move: ${userMove}`);
-    this.gameView.printLog(`Computer move: ${computerMove}`);
+    this.gameView.printLog(`HMAC your move: ${this.hmac_user}`);
+    this.gameView.printLog(`Computer move: ${computerMove} (${this.gameCrypto.validateHMAC(this.hmac_key, this.hmac_computer, computerMove)})`);
 
     this.gameView.printLog(this.gameRules.getResult(userNode, computerNode));
     this.gameView.printLog(`HMAC key: ${this.hmac_key}`)
