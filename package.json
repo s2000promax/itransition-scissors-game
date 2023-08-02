@@ -5,8 +5,9 @@
   "main": "src/index.ts",
   "type": "module",
   "scripts": {
-    "start:3": "ts-node src/index.ts Rock Scissors Paper",
-    "start:5": "ts-node src/index.ts Rock Scissor Lizard Spock Paper",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "start:3": "ts-node src/index.ts Rock Paper Scissors",
+    "start:5": "ts-node src/index.ts rock Spock paper lizard scissors",
     "start:7": "ts-node src/index.ts Rock Fire Scissors Sponge Paper Air Water",
     "start:9": "ts-node src/index.ts Rock Scissors Lizard Paper Spiderman Batman Wizard Glock Spock",
     "start:15": "ts-node src/index.ts Rock Fire Scissors Snake Human Tree Wolf Sponge Paper Air Water Dragon Devil Lighning Gun"
@@ -17,6 +18,7 @@
   "devDependencies": {
     "@types/node": "^20.4.5",
     "@types/readline-sync": "^1.4.4",
+    "prettier": "3.0.0",
     "ts-node": "^10.9.1",
     "tslib": "^2.6.1",
     "typescript": "^5.1.6"
