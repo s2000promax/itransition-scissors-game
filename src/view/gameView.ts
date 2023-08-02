@@ -5,7 +5,7 @@ import { PrintTable } from '../utils/printTable.ts';
 export class GameView {
   private table!: PrintTable;
 
-  public printUserMenu(nodes: NodeModel[]): string {
+  public showUserMenu(nodes: NodeModel[]): string {
     const readline = Readline;
 
     this.printLog('Available moves:');
@@ -25,18 +25,24 @@ export class GameView {
 
     if (isNaN(moveNumber) || moveNumber < 1 || moveNumber > nodes.length) {
       this.printLog('Invalid move. Try again.');
-      return this.printUserMenu(nodes);
+      return this.showUserMenu(nodes);
     }
     return nodes[moveNumber - 1].getNodeName();
   }
 
-  public printLog(log: string = ''): void {
-    console.log(log);
+  public isContinionDialog(): boolean {
+    const readline = Readline;
+    const userInput = readline.question('Would you like to continue? (Y/N) ');
+    return userInput.toLowerCase() === 'y';
   }
 
-  public showHelp(nodes: NodeModel[]): void {
-    this.table = new PrintTable(nodes)
+  public showHelp(nodes: NodeModel[], adjacencyMatrix: boolean[][]): void {
+    this.table = new PrintTable(nodes, adjacencyMatrix)
     this.printLog(this.table.renderTable());
+  }
+
+  public printLog(log: string = ''): void {
+    console.log(log);
   }
 
   public clearConsole(): void {

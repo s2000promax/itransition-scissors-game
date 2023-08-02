@@ -1,21 +1,11 @@
 export class NodeModel {
-  private connections: Map<NodeModel, boolean> = new Map();
+  private readonly name: string;
 
-  constructor(public readonly name: string) {}
-
-  addConnection(node: NodeModel, beats: boolean): void {
-    this.connections.set(node, beats);
+  constructor(name: string) {
+    this.name = name;
   }
 
-  beats(node: NodeModel): boolean {
-    return this.connections.get(node)!;
-  }
-
-  getNodeName(): string {
+  public getNodeName(): string {
     return this.name;
-  }
-
-  getConnections() {
-    return this.connections;
   }
 }

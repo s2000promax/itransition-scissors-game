@@ -1,38 +1,28 @@
 import { NodeModel } from './nodeModel.ts';
 
 export class GameModel {
-  private readonly nodes: NodeModel[];
+  private nodes: NodeModel[] = [];
+  private adjacencyMatrix: boolean[][] = [];
 
-  constructor(public readonly names: string[]) {
-    this.nodes = names.map((name) => new NodeModel(name));
-    this.buildGraph();
+  constructor(public readonly moves: string[]) {
+    this.buildGraph(moves);
   }
 
-  private buildGraph(): void {
-    const totalNodes = this.nodes.length;
-    const halfTotalNodes = Math.floor(totalNodes / 2);
-
-    for (let i = 0; i < totalNodes; i++) {
-      const currentNode = this.nodes[i];
-      for (let j = 1; j <= halfTotalNodes; j++) {
-        const otherNodeIndex = (i + j) % totalNodes;
-        const otherNode = this.nodes[otherNodeIndex];
-
-        currentNode.addConnection(otherNode, true);
-        otherNode.addConnection(currentNode, false);
-      }
-    }
-  }
-
-  public findNode(move: string): NodeModel {
-    const node = this.nodes.find((n) => n.name === move);
-    if (!node) {
-      throw new Error(`Invalid move: ${move}`);
-    }
-    return node;
+  private buildGraph(moves: string[]): void {
+    const length = moves.length;
+    this.nodes = moves.map(move => new NodeModel(move));
+    this.adjacencyMatrix = this.nodes
+      .map((_, i) => this.nodes
+        .map((_, j) => (j - i + length) % length <= (length - 1) / 2 && i !== j));
+    console.log(this.nodes)
+    console.log(this.adjacencyMatrix);
   }
 
   public getNodes(): NodeModel[] {
     return this.nodes;
+  }
+
+  public getAdjacencyMatrix(): boolean[][] {
+    return this.adjacencyMatrix;
   }
 }

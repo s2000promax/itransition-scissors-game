@@ -10,7 +10,11 @@ interface RowInterface {
 
 export class PrintTable {
   private table: Table;
-  constructor(public readonly nodes: NodeModel[]) {
+
+  constructor(
+    public readonly nodes: NodeModel[],
+    public readonly adjacencyMatrix: boolean[][],
+  ) {
     this.table = new Table({
       title: 'Winning moves for the user',
       rowSeparator: true,
@@ -28,24 +32,23 @@ export class PrintTable {
       ]
     });
 
-    this.table.addRows(this.createRows(nodes))
+    this.table.addRows(this.createRows(nodes, adjacencyMatrix))
   }
 
-  private createRows(nodes: NodeModel[]): Array<RowInterface> {
-    const moves = nodes.map(nm => nm.getNodeName());
+  private createRows(nodes: NodeModel[], adjacencyMatrix: boolean[][]): Array<RowInterface> {
     const rows: Array<RowInterface> = [];
 
-    for (let i = 0; i < moves.length; i += 1) {
-      const row: { [key: string]: string } = {
-        header: moves[i],
-        [moves[i]]: 'Draw'
+    for (let i = 0; i < adjacencyMatrix.length; i += 1) {
+      const row: RowInterface = {
+        header: nodes[i].getNodeName(),
       };
-
-      const moveConnections = [...nodes[i].getConnections().values()]
-
-      moves.filter(m => m !== moves[i]).forEach((connection, index) => {
-        row[connection] = moveConnections[index] ? 'Win' : 'Lose'
-      })
+      for (let j = 0; j < adjacencyMatrix.length; j += 1) {
+        if (i == j) {
+          row[nodes[j].getNodeName()] = 'Draw';
+        } else {
+          row[nodes[j].getNodeName()] = !adjacencyMatrix[i][j] ? 'Win' : 'Lose';
+        }
+      }
       rows.push(row);
     }
 
