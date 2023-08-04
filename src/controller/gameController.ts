@@ -10,14 +10,13 @@ export class GameController {
     private gameView: GameView;
     private gameRules: GameRules;
 
-    private readonly hmac_key: string;
+    private hmac_key :string = '';
     private hmac_computer: string = '';
     private hmac_user: string = '';
 
     constructor(public readonly params: string[]) {
         this.gameView = new GameView();
         this.gameCrypto = new GameCrypto();
-        this.hmac_key = this.gameCrypto.generateHmacKey();
         this.gameParams = this.validateParams(params);
         this.gameModel = new GameModel(this.gameParams!);
         this.gameRules = new GameRules(
@@ -29,6 +28,8 @@ export class GameController {
     public playGame(): void {
         while (true) {
             this.gameView.clearConsole();
+
+            this.hmac_key = this.gameCrypto.generateHmacKey();
 
             const computerMove = this.gameRules.getRandomMove();
             this.hmac_computer = this.gameCrypto.encode(
@@ -108,6 +109,7 @@ export class GameController {
     }
 
     private clearVariables(): void {
+        this.hmac_key = '';
         this.hmac_computer = '';
         this.hmac_user = '';
     }
